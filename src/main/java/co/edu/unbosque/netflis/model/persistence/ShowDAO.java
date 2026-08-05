@@ -2,75 +2,188 @@ package co.edu.unbosque.netflis.model.persistence;
 
 
 import co.edu.unbosque.netflis.model.Show;
+import co.edu.unbosque.netflis.model.ShowDTO;
+import com.opencsv.CSVWriter;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import org.modelmapper.ModelMapper;
 
+import java.io.Reader;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class ShowDAO {
+public class ShowDAO implements OperationDAO<ShowDTO, Show>{
 
     private static final String FILE_NAME = "netflix_titles.txt";
-    private static final String SEP = "\\|";
+    private static final char DELIMITER = '|';
     private List<Show> shows = new ArrayList<>();
+    private ModelMapper modelMapper;
+
+    public ShowDAO() {
+        this.modelMapper = new ModelMapper();
+        //Cargar datos al instanciar si es necesario:
+        load();
+    }
+
+    @Override
+    public boolean add(ShowDTO object) {
+        if (object == null) return false;
+        Show show = modelMapper.map(object, Show.class);
+        return shows.add(show);
+    }
+
+    @Override
+    public ShowDTO findById(String id) {
+        if (id == null || id.isBlank()) return null;
+        return shows.stream()
+                .filter(s -> s.getShowId() != null && s.getShowId().equalsIgnoreCase(id.trim()))
+                .findFirst()
+                .map(s -> modelMapper.map(s, ShowDTO.class))
+                .orElse(null);
+    }
+
+    @Override
+    public List<ShowDTO> findByType(String type) {
+        if (type == null || type.isBlank()) return List.of();
+        return shows.stream()
+                .filter(s -> s.getType() != null && s.getType().equalsIgnoreCase(type.trim()))
+                .map(s -> modelMapper.map(s, ShowDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ShowDTO> findByTitle(String title) {
+        if (title == null || title.isBlank()) return List.of();
+        String query = title.toLowerCase().trim();
+        return shows.stream()
+                .filter(s -> s.getTitle() != null && s.getTitle().toLowerCase().contains(query))
+                .map(s -> modelMapper.map(s, ShowDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ShowDTO> findByDirector(String director) {
+        if (director == null || director.isBlank()) return List.of();
+        String query = director.toLowerCase().trim();
+        return shows.stream()
+                .filter(s -> s.getDirector() != null && s.getDirector().toLowerCase().contains(query))
+                .map(s -> modelMapper.map(s, ShowDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ShowDTO> findByCast(String cast) {
+        if (cast == null || cast.isBlank()) return List.of();
+        String query = cast.toLowerCase().trim();
+        return shows.stream()
+                .filter(s -> s.getCast() != null && s.getCast().toLowerCase().contains(query))
+                .map(s -> modelMapper.map(s, ShowDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ShowDTO> findByCountry(String country) {
+        if (country == null || country.isBlank()) return List.of();
+        String query = country.toLowerCase().trim();
+        return shows.stream()
+                .filter(s -> s.getCountry() != null && s.getCountry().toLowerCase().contains(query))
+                .map(s -> modelMapper.map(s, ShowDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ShowDTO> findByDateAdded(String dateAdded) {
+        if (dateAdded == null || dateAdded.isBlank()) return List.of();
+        String query = dateAdded.toLowerCase().trim();
+        return shows.stream()
+                .filter(s -> s.getDate() != null && s.getDate().toLowerCase().contains(query))
+                .map(s -> modelMapper.map(s, ShowDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ShowDTO> findByReleaseYear(int releaseYear) {
+        String yearStr = String.valueOf(releaseYear);
+        return shows.stream()
+                .filter(s -> s.getReleaseYear() != null && s.getReleaseYear().trim().equals(yearStr))
+                .map(s -> modelMapper.map(s, ShowDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ShowDTO> findByRating(String rating) {
+        if (rating == null || rating.isBlank()) return List.of();
+        return shows.stream()
+                .filter(s -> s.getRating() != null && s.getRating().equalsIgnoreCase(rating.trim()))
+                .map(s -> modelMapper.map(s, ShowDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ShowDTO> findByDuration(String duration) {
+        if (duration == null || duration.isBlank()) return List.of();
+        String query = duration.toLowerCase().trim();
+        return shows.stream()
+                .filter(s -> s.getDuration() != null && s.getDuration().toLowerCase().contains(query))
+                .map(s -> modelMapper.map(s, ShowDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ShowDTO> findByListedIn(String listedIn) {
+        if (listedIn == null || listedIn.isBlank()) return List.of();
+        String query = listedIn.toLowerCase().trim();
+        return shows.stream()
+                .filter(s -> s.getListedIn() != null && s.getListedIn().toLowerCase().contains(query))
+                .map(s -> modelMapper.map(s, ShowDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ShowDTO> findByDescription(String description) {
+        if (description == null || description.isBlank()) return List.of();
+        String query = description.toLowerCase().trim();
+        return shows.stream()
+                .filter(s -> s.getDescription() != null && s.getDescription().toLowerCase().contains(query))
+                .map(s -> modelMapper.map(s, ShowDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<Show> getShows() {
+        return shows;
+    }
 
     public void load() {
         shows.clear();
         try {
             Path path = Paths.get("src", "archivos", FILE_NAME);
             Files.createDirectories(path.getParent());
+
             if (!Files.exists(path)) {
                 Files.createFile(path);
                 return;
             }
 
-            List<String> lines = Files.readAllLines(path);
-            if (lines.isEmpty()) return;
+            try (Reader reader = Files.newBufferedReader(path)) {
+                List<Show> result = new CsvToBeanBuilder<Show>(reader)
+                        .withSeparator(DELIMITER)
+                        .withType(Show.class)
+                        .withIgnoreLeadingWhiteSpace(true)
+                        .build()
+                        .parse();
 
-            int start = 0;
-            // Detectar header
-            if (lines.get(0).toLowerCase().contains("show_id") ||
-                    lines.get(0).toLowerCase().contains("listed_in")) {
-                start = 1;
-            }
-
-            for (int i = start; i < lines.size(); i++) {
-                String line = lines.get(i);
-                if (line == null || line.trim().isEmpty()) continue;
-
-                // Quitar la coma residual que viene al final de cada línea en el TXT
-                if (line.endsWith(",")) {
-                    line = line.substring(0, line.length() - 1);
-                }
-
-                String[] c = line.split(SEP, -1);
-
-                // Validación mínima (deben venir las 12 columnas)
-                if (c.length < 12) continue;
-
-                // Mapeo exacto a los 12 atributos del modelo Show (todos String)
-                Show s = new Show(
-                        c[0].trim(),  // showId
-                        c[1].trim(),  // type
-                        c[2].trim(),  // title
-                        c[3].trim(),  // director
-                        c[4].trim(),  // cast
-                        c[5].trim(),  // country
-                        c[6].trim(),  // date (date_added)
-                        c[7].trim(),  // releaseYear
-                        c[8].trim(),  // rating
-                        c[9].trim(),  // duration
-                        c[10].trim(), // listedIn
-                        c[11].trim()  // description
-                );
-
-                shows.add(s);
+                shows.addAll(result);
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Error cargando " + FILE_NAME, e);
+            throw new RuntimeException("Error cargando " + FILE_NAME + " con OpenCSV", e);
         }
     }
 
@@ -79,31 +192,17 @@ public class ShowDAO {
             Path path = Paths.get("src", "archivos", FILE_NAME);
             Files.createDirectories(path.getParent());
 
-            StringBuilder sb = new StringBuilder();
-            sb.append("show_id|type|title|director|cast|country|date_added|release_year|rating|duration|listed_in|description,\n");
+            try (Writer writer = Files.newBufferedWriter(path)) {
+                StatefulBeanToCsv<Show> beanToCsv = new StatefulBeanToCsvBuilder<Show>(writer)
+                        .withSeparator(DELIMITER)
+                        .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER) // No rodea los valores con comillas
+                        .build();
 
-            for (Show s : shows) {
-                sb.append(s.getShowId()).append("|")
-                        .append(s.getType()).append("|")
-                        .append(s.getTitle()).append("|")
-                        .append(s.getDirector() == null ? "" : s.getDirector()).append("|")
-                        .append(s.getCast() == null ? "" : s.getCast()).append("|")
-                        .append(s.getCountry() == null ? "" : s.getCountry()).append("|")
-                        .append(s.getDate() == null ? "" : s.getDate()).append("|")
-                        .append(s.getReleaseYear() == null ? "" : s.getReleaseYear()).append("|")
-                        .append(s.getRating() == null ? "" : s.getRating()).append("|")
-                        .append(s.getDuration() == null ? "" : s.getDuration()).append("|")
-                        .append(s.getListedIn() == null ? "" : s.getListedIn()).append("|")
-                        .append(s.getDescription() == null ? "" : s.getDescription())
-                        .append(",\n");
+                beanToCsv.write(shows);
             }
 
-            Files.writeString(path, sb.toString(),
-                    StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-
         } catch (Exception e) {
-            throw new RuntimeException("Error persistiendo " + FILE_NAME, e);
+            throw new RuntimeException("Error persistiendo " + FILE_NAME + " con OpenCSV", e);
         }
     }
-
 }
