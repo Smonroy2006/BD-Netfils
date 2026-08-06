@@ -7,6 +7,7 @@ import com.opencsv.CSVWriter;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import lombok.Getter;
 import org.modelmapper.ModelMapper;
 
 import java.io.Reader;
@@ -21,14 +22,14 @@ import java.util.stream.Collectors;
 
 public class ShowDAO implements OperationDAO<ShowDTO, Show>{
 
-    private static final String FILE_NAME = "netflix_titles.txt";
+    private static final String FILE_NAME = "catalogo.txt";
     private static final char DELIMITER = '|';
+    @Getter
     private List<Show> shows = new ArrayList<>();
     private ModelMapper modelMapper;
 
     public ShowDAO() {
         this.modelMapper = new ModelMapper();
-        //Cargar datos al instanciar si es necesario:
         load();
     }
 
@@ -156,10 +157,6 @@ public class ShowDAO implements OperationDAO<ShowDTO, Show>{
                 .collect(Collectors.toList());
     }
 
-    public List<Show> getShows() {
-        return shows;
-    }
-
     public void load() {
         shows.clear();
         try {
@@ -176,10 +173,19 @@ public class ShowDAO implements OperationDAO<ShowDTO, Show>{
                         .withSeparator(DELIMITER)
                         .withType(Show.class)
                         .withIgnoreLeadingWhiteSpace(true)
+                        .withIgnoreEmptyLine(true)
                         .build()
                         .parse();
 
                 shows.addAll(result);
+                
+                // DEBUG
+                if (!shows.isEmpty()) {
+                    System.out.println("✓ Cargadas " + shows.size() + " filas");
+                    System.out.println("Primera fila ID: " + shows.get(0).getShowId());
+                    System.out.println("Primera fila Type: " + shows.get(0).getType());
+                    System.out.println("Primera fila Title: " + shows.get(0).getTitle());
+                }
             }
 
         } catch (Exception e) {
