@@ -76,7 +76,7 @@ public class Controller implements ActionListener {
                     int anio = Integer.parseInt(texto);
                     resultados = dao.findByReleaseYear(anio);
                 } catch (NumberFormatException ex) {
-                    resultados = List.of(); // Si el usuario escribe letras en vez de un año, retorna vacío
+                    resultados = List.of();
                 }
             }
             default -> resultados = List.of();
