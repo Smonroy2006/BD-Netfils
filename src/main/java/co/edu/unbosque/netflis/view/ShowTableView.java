@@ -62,27 +62,27 @@ public class ShowTableView extends JPanel {
         };
 
         tabla = new JTable(model);
-        tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Permite scroll horizontal para las 12 columnas
+        tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); 
 
-        // Ajuste básico de ancho de columnas
-        tabla.getColumnModel().getColumn(0).setPreferredWidth(60);   // ID
-        tabla.getColumnModel().getColumn(1).setPreferredWidth(60);   // Type
-        tabla.getColumnModel().getColumn(2).setPreferredWidth(180);  // Title
-        tabla.getColumnModel().getColumn(3).setPreferredWidth(140);  // Director
-        tabla.getColumnModel().getColumn(4).setPreferredWidth(180);  // Cast
-        tabla.getColumnModel().getColumn(5).setPreferredWidth(100);  // Country
-        tabla.getColumnModel().getColumn(6).setPreferredWidth(120);  // Date
-        tabla.getColumnModel().getColumn(7).setPreferredWidth(60);   // Year
-        tabla.getColumnModel().getColumn(8).setPreferredWidth(60);   // Rating
-        tabla.getColumnModel().getColumn(9).setPreferredWidth(80);   // Duration
-        tabla.getColumnModel().getColumn(10).setPreferredWidth(150); // Listed In
-        tabla.getColumnModel().getColumn(11).setPreferredWidth(300); // Description
+       
+        tabla.getColumnModel().getColumn(0).setPreferredWidth(60);   
+        tabla.getColumnModel().getColumn(1).setPreferredWidth(60);   
+        tabla.getColumnModel().getColumn(2).setPreferredWidth(180);  
+        tabla.getColumnModel().getColumn(3).setPreferredWidth(140);  
+        tabla.getColumnModel().getColumn(4).setPreferredWidth(180);  
+        tabla.getColumnModel().getColumn(5).setPreferredWidth(100);  
+        tabla.getColumnModel().getColumn(6).setPreferredWidth(120);  
+        tabla.getColumnModel().getColumn(7).setPreferredWidth(60);   
+        tabla.getColumnModel().getColumn(8).setPreferredWidth(60);   
+        tabla.getColumnModel().getColumn(9).setPreferredWidth(80);   
+        tabla.getColumnModel().getColumn(10).setPreferredWidth(150); 
+        tabla.getColumnModel().getColumn(11).setPreferredWidth(300); 
 
         add(new JScrollPane(tabla), BorderLayout.CENTER);
     }
 
     public void actualizarTabla(List<ShowDTO> listaShows) {
-        model.setRowCount(0); // Limpia datos previos
+        model.setRowCount(0); 
         if (listaShows == null || listaShows.isEmpty()) return;
 
         for (ShowDTO s : listaShows) {
