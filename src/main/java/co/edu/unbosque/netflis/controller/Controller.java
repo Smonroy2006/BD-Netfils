@@ -57,13 +57,11 @@ public class Controller implements ActionListener {
     }
 
     private void ejecutarGuardado() {
-        // Validación básica en el controlador
         if (view.getPanelForm().getShowId().isEmpty() || view.getPanelForm().getTitle().isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(view, "El ID y el Título son campos obligatorios.");
             return;
         }
 
-        // Recolectar datos de la vista
         ShowDTO nuevo = new ShowDTO();
         nuevo.setShowId(view.getPanelForm().getShowId());
         nuevo.setType(view.getPanelForm().getType());

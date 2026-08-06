@@ -4,10 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-/**
- * Vista para el formulario de creación de una nueva entidad Show.
- * Sigue el patrón MVC: solo contiene componentes gráficos y métodos de acceso.
- */
 public class ShowFormView extends JPanel {
 
     private JTextField txtShowId, txtType, txtTitle, txtDirector, txtCast, txtCountry, 
@@ -27,46 +23,38 @@ public class ShowFormView extends JPanel {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Fila 0: ID y Tipo
         addLabelAndField(panelForm, "Show ID:", txtShowId = new JTextField(10), 0, 0, gbc);
         addLabelAndField(panelForm, "Tipo (Movie/TV Show):", txtType = new JTextField(10), 2, 0, gbc);
 
-        // Fila 1: Título
         gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 1;
         panelForm.add(new JLabel("Título:"), gbc);
         gbc.gridx = 1; gbc.gridwidth = 3;
         txtTitle = new JTextField(30);
         panelForm.add(txtTitle, gbc);
 
-        // Fila 2: Director y País
         gbc.gridwidth = 1;
         addLabelAndField(panelForm, "Director:", txtDirector = new JTextField(15), 0, 2, gbc);
         addLabelAndField(panelForm, "País:", txtCountry = new JTextField(15), 2, 2, gbc);
 
-        // Fila 3: Reparto
         gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 1;
         panelForm.add(new JLabel("Reparto:"), gbc);
         gbc.gridx = 1; gbc.gridwidth = 3;
         txtCast = new JTextField(30);
         panelForm.add(txtCast, gbc);
 
-        // Fila 4: Fecha Agregada y Año
         gbc.gridwidth = 1;
         addLabelAndField(panelForm, "Fecha (Month DD, YYYY):", txtDate = new JTextField(15), 0, 4, gbc);
         addLabelAndField(panelForm, "Año Lanzamiento:", txtReleaseYear = new JTextField(15), 2, 4, gbc);
 
-        // Fila 5: Rating y Duración
         addLabelAndField(panelForm, "Rating:", txtRating = new JTextField(15), 0, 5, gbc);
         addLabelAndField(panelForm, "Duración:", txtDuration = new JTextField(15), 2, 5, gbc);
 
-        // Fila 6: Categorías (Listed In)
         gbc.gridx = 0; gbc.gridy = 6; gbc.gridwidth = 1;
         panelForm.add(new JLabel("Categorías:"), gbc);
         gbc.gridx = 1; gbc.gridwidth = 3;
         txtListedIn = new JTextField(30);
         panelForm.add(txtListedIn, gbc);
 
-        // Fila 7: Descripción
         gbc.gridx = 0; gbc.gridy = 7; gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.NORTH;
         panelForm.add(new JLabel("Descripción:"), gbc);
@@ -78,7 +66,6 @@ public class ShowFormView extends JPanel {
 
         add(panelForm, BorderLayout.CENTER);
 
-        // Panel de botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         btnGuardar = new JButton("Guardar Registro");
         btnGuardar.setActionCommand("GUARDAR");
@@ -97,7 +84,6 @@ public class ShowFormView extends JPanel {
         panel.add(field, gbc);
     }
 
-    // Getters para los datos del formulario
     public String getShowId() { return txtShowId.getText().trim(); }
     public String getType() { return txtType.getText().trim(); }
     public String getTitle() { return txtTitle.getText().trim(); }
