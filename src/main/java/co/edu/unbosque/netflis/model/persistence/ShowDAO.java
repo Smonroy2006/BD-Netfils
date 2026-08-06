@@ -201,7 +201,7 @@ public class ShowDAO implements OperationDAO<ShowDTO, Show>{
             try (Writer writer = Files.newBufferedWriter(path)) {
                 StatefulBeanToCsv<Show> beanToCsv = new StatefulBeanToCsvBuilder<Show>(writer)
                         .withSeparator(DELIMITER)
-                        .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER) // No rodea los valores con comillas
+                        .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
                         .build();
 
                 beanToCsv.write(shows);
