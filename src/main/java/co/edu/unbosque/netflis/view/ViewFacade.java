@@ -1,10 +1,12 @@
 package co.edu.unbosque.netflis.view;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 public class ViewFacade extends JFrame {
 
     private ShowTableView panelTabla;
+    private ShowFormView panelForm;
+    private JTabbedPane pestañas;
 
     public ViewFacade() {
         setTitle("Netflis - Catálogo de Contenidos");
@@ -17,12 +19,22 @@ public class ViewFacade extends JFrame {
     }
 
     private void inicializarComponentes() {
-        panelTabla = new ShowTableView();
+        pestañas = new JTabbedPane();
         
-        add(panelTabla);
+        panelTabla = new ShowTableView();
+        panelForm = new ShowFormView();
+        
+        pestañas.addTab("Catálogo", panelTabla);
+        pestañas.addTab("Nuevo Registro", panelForm);
+        
+        add(pestañas);
     }
 
     public ShowTableView getPanelTabla() {
         return panelTabla;
+    }
+
+    public ShowFormView getPanelForm() {
+        return panelForm;
     }
 }

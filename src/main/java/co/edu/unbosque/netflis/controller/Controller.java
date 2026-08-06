@@ -28,11 +28,12 @@ public class Controller implements ActionListener {
     private void asignarOyentes() {
         view.getPanelTabla().addBotonBuscarListener(this);
         view.getPanelTabla().addBotonLimpiarListener(this);
+        view.getPanelForm().addActionListener(this);
     }
 
     private void iniciarAplicacion() {
         dao.load();
-        mostrarTodosLosShows();
+        refrescarTabla();
         view.setVisible(true);
     }
 
@@ -44,8 +45,44 @@ public class Controller implements ActionListener {
                 break;
             case "LIMPIAR":
                 view.getPanelTabla().limpiarBusqueda();
-                mostrarTodosLosShows();
+                refrescarTabla();
                 break;
+            case "GUARDAR":
+                ejecutarGuardado();
+                break;
+            case "LIMPIAR_FORM":
+                view.getPanelForm().limpiarCampos();
+                break;
+        }
+    }
+
+    private void ejecutarGuardado() {
+        // Validación básica en el controlador
+        if (view.getPanelForm().getShowId().isEmpty() || view.getPanelForm().getTitle().isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(view, "El ID y el Título son campos obligatorios.");
+            return;
+        }
+
+        // Recolectar datos de la vista
+        ShowDTO nuevo = new ShowDTO();
+        nuevo.setShowId(view.getPanelForm().getShowId());
+        nuevo.setType(view.getPanelForm().getType());
+        nuevo.setTitle(view.getPanelForm().getTitle());
+        nuevo.setDirector(view.getPanelForm().getDirector());
+        nuevo.setCast(view.getPanelForm().getCast());
+        nuevo.setCountry(view.getPanelForm().getCountry());
+        nuevo.setDate(view.getPanelForm().getDate());
+        nuevo.setReleaseYear(view.getPanelForm().getReleaseYear());
+        nuevo.setRating(view.getPanelForm().getRating());
+        nuevo.setDuration(view.getPanelForm().getDuration());
+        nuevo.setListedIn(view.getPanelForm().getListedIn());
+        nuevo.setDescription(view.getPanelForm().getDescription());
+
+        if (dao.add(nuevo)) {
+            dao.persist();
+            javax.swing.JOptionPane.showMessageDialog(view, "Registro guardado y persistido correctamente.");
+            view.getPanelForm().limpiarCampos();
+            refrescarTabla();
         }
     }
 
@@ -55,7 +92,7 @@ public class Controller implements ActionListener {
         List<ShowDTO> resultados;
 
         if (texto.isEmpty() || criterio.equals("Todos")) {
-            mostrarTodosLosShows();
+            refrescarTabla();
             return;
         }
 
@@ -85,7 +122,7 @@ public class Controller implements ActionListener {
         view.getPanelTabla().actualizarTabla(resultados);
     }
 
-    private void mostrarTodosLosShows() {
+    public void refrescarTabla() {
         List<ShowDTO> todos = dao.getShows().stream()
                 .map(s -> modelMapper.map(s, ShowDTO.class))
                 .collect(Collectors.toList());
